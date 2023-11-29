@@ -17,9 +17,9 @@ basic_map2([[w,s,w],
 
 display_map(Map) :-
     Map = [Row|_], length(Row,L),
-    write('     '),display_line(L,'▁'),write('▍'),nl,
+    write('     '),display_line(L,' '),write(' '),nl,
     display_rows(Map),
-    write('     '),display_line(L,'▔'),write('▍'),nl.
+    write('     '),display_line(L,' '),write(' '),nl.
 
 display_rows([]).
 display_rows([Row|T]) :-
