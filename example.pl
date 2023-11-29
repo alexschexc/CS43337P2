@@ -17,23 +17,23 @@ basic_map2([[w,s,w],
 
 display_map(Map) :-
     Map = [Row|_], length(Row,L),
-    write('    ▐'),display_line(L,'▁'),write('▍'),nl,
+    write('     '),display_line(L,'▁'),write('▍'),nl,
     display_rows(Map),
-    write('    ▐'),display_line(L,'▔'),write('▍'),nl.
+    write('     '),display_line(L,'▔'),write('▍'),nl.
 
 display_rows([]).
 display_rows([Row|T]) :-
-    write('    ▐'),
+    write('     '),
     display_row(Row),
-    write('▍'),nl,
+    write(' '),nl,
     display_rows(T).
 
 display_row([]).
 display_row([H|T]) :- display_symbol(H), display_row(T).
 
-display_symbol(n) :- write('░'), !.
+display_symbol(n) :- write(' '), !.
 display_symbol(f) :- write(' '), !.
-display_symbol(w) :- write('█'), !.
+display_symbol(w) :- write(' '), !.
 display_symbol(X) :- write(X).
 
 display_line(0,_).
