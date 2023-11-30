@@ -97,6 +97,7 @@ find_value_row([H|T],V,R,C,Acc,Coord) :-
     H\=V,C2 is C+1,
     find_value_row(T,V,R,C2,Acc,Coord).
 
+%  args: N = number of tests, Rows/Cols = number of rows and columns the maze has, Map = where the generated maze gets stored
 gen_map(N, Rows, Cols, Map) :-
     make_base(Rows,Cols,Map1),
     R2 is Rows-1, C2 is Cols-1,

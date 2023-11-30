@@ -1,4 +1,6 @@
+% simple map that's supposed to work
 simple_map([[s,f,e]]).
+% bad_maps that should fail
 bad_map([[s],[e,w]]).
 bad_map2([[s,f,w]]).
 bad_map3([[s,e,e]]).
