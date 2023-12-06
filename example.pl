@@ -1,4 +1,3 @@
-%% ----- Professor Comments --------
 % This file contains a collections of test mazes
 % Map predicates prefixed with "bad" should not work.
 %
@@ -8,11 +7,8 @@
 % When using the commandline you can provide swipl with multiple files.
 %
 % example use: ?- simple_map(M), display_map(M), find_exit(M).
-%% ----- Professor Comments --------
 
-% simple map that's supposed to work
 simple_map([[s,f,e]]).
-% bad_maps that should fail
 bad_map([[s],[e,w]]).
 bad_map2([[s,f,w]]).
 bad_map3([[s,e,e]]).
@@ -31,23 +27,23 @@ basic_map2([[w,s,w],
 
 display_map(Map) :-
     Map = [Row|_], length(Row,L),
-    write('     '),display_line(L,' '),write(' '),nl,
+    write('    ▐'),display_line(L,'▁'),write('▍'),nl,
     display_rows(Map),
-    write('     '),display_line(L,' '),write(' '),nl.
+    write('    ▐'),display_line(L,'▔'),write('▍'),nl.
 
 display_rows([]).
 display_rows([Row|T]) :-
-    write('     '),
+    write('    ▐'),
     display_row(Row),
-    write(' '),nl,
+    write('▍'),nl,
     display_rows(T).
 
 display_row([]).
 display_row([H|T]) :- display_symbol(H), display_row(T).
 
-display_symbol(n) :- write(' '), !.
+display_symbol(n) :- write('░'), !.
 display_symbol(f) :- write(' '), !.
-display_symbol(w) :- write(' '), !.
+display_symbol(w) :- write('█'), !.
 display_symbol(X) :- write(X).
 
 display_line(0,_).
