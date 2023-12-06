@@ -18,14 +18,14 @@
 % is assumed invalid as there is either no exit, or the maze 
 % is a prison(no viable exits from start position).
 find_exit(Maze,_) :- 
-    findStartSpace(Maze, Begin, HowMuch)
-    findEndSpace(Maze, Finish)
-    write(Maze' is a maze.').
+    findStartSpace(Maze, Begin, HowMuch),
+    findEndSpace(Maze, Finish),
+    write(Maze,' is a maze.').
 find_exit(Maze,Actions) :-  
-    findStartSpace(Maze, Begin, HowMuch)
+    findStartSpace(Maze, Begin, HowMuch),
     
-    
-    write(Maze' is a maze.').
+
+    write(Maze,' is a maze.').
 
 nth((X,_,_), 1, X).
 nth((_,X,_), 2, X).
@@ -38,13 +38,14 @@ setNth((X,Y,_), 3, Z, (X,Y,Z)).
 % Locates Starting Position, 
 % if there is no start or more 
 % than 1 start then maze is invalid.
-findStartSpace(Maze1, Start, StartCount) :- 
-    .
+findStartSpace([], Start, 0).
+findStartSpace([], Start, StartCount) :- 
+    findStartSpace(Maze1) .
 % Locates Ending Position if no actions are given, 
 % if there is no end then maze is invalid.
-findEndSpace(Maze2, End) :- 
+findEndSpace([], End) :- 
     .
-availableSpaces() :- .
+%availableSpaces() :- .
 
 % for testing the identity of 
 % current space position 
