@@ -1,3 +1,15 @@
+%% ----- Professor Comments --------
+% This file contains a collections of test mazes
+% Map predicates prefixed with "bad" should not work.
+%
+% display_map is a predicate that will pretty print
+% a maze.
+%
+% When using the commandline you can provide swipl with multiple files.
+%
+% example use: ?- simple_map(M), display_map(M), find_exit(M).
+%% ----- Professor Comments --------
+
 % simple map that's supposed to work
 simple_map([[s,f,e]]).
 % bad_maps that should fail

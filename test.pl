@@ -1,3 +1,16 @@
+%% ----- Professor Comments --------
+% This file provides the gen_map/4 predicate.
+% It takes 4 arguments:
+%   1. The number of iterations the algorithm should go through, 4 is a good value
+%   2. The number of rows the map (maze) should have
+%   3. The number of columns the map (maze) should have
+%   4. Is the random map (maze)
+%
+% When using the commandline you can provide swipl with multiple files.
+%
+% Example Usage: ?- gen_map(4, 10,10,M), find_exit(M,A).
+%% ----- Professor Comments --------
+
 :- module(test,[gen_map/4,show_random_map/3]).
 
 make_base(0,_,[]).
