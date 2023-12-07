@@ -20,56 +20,79 @@
 find_exit(Maze,Actions) :-  
     Begin = s,
     Finish = e,
-    Wall = w,
-    Floor = f,
-    find-ymax(Maze,Ymax),
-    find-xmax(Maze,Xmax),
-    write('ymax is - '), write(Ymax),nl,
-    write('xmax is - '), write(Xmax),nl,
+    %find_ymax(Maze,Ymax),
+    %find_xmax(Maze,Xmax),
+    %write('ymax is - '), write(Ymax),nl,
+    %write('xmax is - '), write(Xmax),nl,
     write('locating start space'),nl,
-    findStartSpace(Maze, Begin, HowMuch, Place1),
-    write('start space is in position '), write(Place1),nl,
+    findStartSpace(Maze, Begin, StartPosition),
+    write('start space is in position '), write(StartPosition),nl,
     write('locating end space'),nl,
-    findEndSpace(Maze, Finish, Place2),
-    write('end space is in position '), write(Place2),nl,
-    write('testing maze'),
-    write(Maze,' is a maze.').
+    findEndSpace(Maze, Finish, EndPosition),
+    write('end space is in position '), write(EndPosition),nl,
+    write('testing maze').
+    %write(Maze,' is a maze.').
 
 % finds number of rows
-find-ymax(Maze,Ym) :-
-    length(Maze,A),
-    A = Ym.
+%find_ymax(Maze,Ym) :-
+%    length(Maze,A),
+%    A = Ym.
 
 % finds number of columns
-find-xmax([Row1|Rows],Xm) :-
-    length(Row1,A),
-    A = Xm.
+%find_xmax([Row1|Rows],Xm) :-
+%    length(Row1,A),
+%    A = Xm.
 % Locates Starting Position, 
 % if there is no start or more 
 % than 1 start then maze is invalid.
-findStartSpace([Heads|Tail], Start, StartCount, Indexs) :- 
-    nth1(Indexs,Heads,Start).
+findStartSpace(Maze, Start, (X,Y)) :- 
+    write('1'),nl,
+    findStartInMaze(Maze,Start,1, 1, (X,Y)).
+
+findStartInMaze([], _, _, _, _):- fail.
+findStartInMaze([Row|Rest], Start, X, Y, (X,Y)) :-
+    write('a'),nl,
+    member(Start,Row),
+    !.
+findStartInMaze([_|Rest], Start, X, Y, (X1,Y1)) :-
+    write('b'),nl,
+    Y2 is Y + 1,
+    write('c'),nl,
+    findStartInMaze(Rest, Start, X, Y2, (X1,Y1)).
+
 % Locates Ending Position if no actions are given, 
 % if there is no end then maze is invalid.
+findEndSpace(Maze, End, (X,Y)) :- 
+    write('A'),nl,
+    findEndInMaze(Maze, End, 1, 1, (X,Y)).
 
+findEndInMaze([], _, _, _, _) :- fail.
+findEndInMaze([Row|Rest], End, X, Y, (X,Y)) :- 
+    write('I'),nl,
+    findEndInRow(Row, End, X, Y),
+    !.
+findEndInMaze([_|Rest], End, X, Y, (X1,Y1)):-
+    write('II'),nl,
+    Y2 is Y + 1,
+    findEndInMaze(Rest, End, X, Y2, (X1,Y1)).
 
-findEndSpace([Heade|Tail], End, Indexe) :- 
-    write('looking for end'),
-    nth1(Indexe,Heade,End),
-    write('end not in this row'),
-    findEndSpace(Tail, End, Indexe).
-
-findEndSpace(Tail, End, Indexe) :- 
-    nth1(Indexe,Tail,End).
+findEndInRow([Space|_], End, X, Y) :-
+    write('a'),nl,
+    nth1(X,Space, End).
+findEndInRow([_|Rest], End, X, Y) :-
+    write('b'),nl,
+    X2 is X + 1,
+    write('c'),nl,
+    findEndInRow(Rest, End, X2, Y).
 % determines which adjacent spaces can be moved into
 %availableSpaces() :- .
 
 % for testing the identity of 
 % current space position 
 % (wall vs floor vs start vs end)
-testSpace(Maze, Actions) :- 
-    . 
+%testSpace(Maze, Actions) :- 
+%    . 
 % Moves to next location.
-navSpace(Maze, Actions) :-
-    .
+%navSpace(Maze, Actions) :-
+%    .
  
