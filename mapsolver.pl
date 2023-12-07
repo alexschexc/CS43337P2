@@ -47,12 +47,12 @@ find_exit(Maze,Actions) :-
 % than 1 start then maze is invalid.
 findStartSpace(Maze, Start, (X,Y)) :- 
     write('1'),nl,
-    findStartInMaze(Maze,Start,1, 1, (X,Y)).
+    findStartInMaze(Maze,Start, X, 1, (X,Y)).
 
 findStartInMaze([], _, _, _, _):- fail.
 findStartInMaze([Row|Rest], Start, X, Y, (X,Y)) :-
     write('a'),nl,
-    member(Start,Row),
+    nth1(X,Start,Row),
     !.
 findStartInMaze([_|Rest], Start, X, Y, (X1,Y1)) :-
     write('b'),nl,
@@ -64,12 +64,12 @@ findStartInMaze([_|Rest], Start, X, Y, (X1,Y1)) :-
 % if there is no end then maze is invalid.
 findEndSpace(Maze, End, (X,Y)) :- 
     write('A'),nl,
-    findEndInMaze(Maze, End, 1, 1, (X,Y)).
+    findEndInMaze(Maze, End, X, 1, (X,Y)).
 
 findEndInMaze([], _, _, _, _) :- fail.
 findEndInMaze([Row|Rest], End, X, Y, (X,Y)) :- 
     write('I'),nl,
-    findEndInRow(Row, End, X, Y),
+    nth1(X, End, Row),
     !.
 findEndInMaze([_|Rest], End, X, Y, (X1,Y1)):-
     write('II'),nl,
