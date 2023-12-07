@@ -52,13 +52,17 @@ findStartSpace(Maze, Start, (X,Y)) :-
 findStartInMaze([], _, _, _, _):- fail.
 findStartInMaze([Row|Rest], Start, X, Y, (X,Y)) :-
     write('a'),nl,
-    nth1(X,Start,Row),
+    write((X,Y)),nl,
+    nth1(X,Row,Start),
     !.
-findStartInMaze([_|Rest], Start, X, Y, (X1,Y1)) :-
+findStartInMaze([_|Rest], Start, X, Y, (X,Y)) :-
     write('b'),nl,
-    Y2 is Y + 1,
+    write(Y1),nl,
+    Y1 is Y + 1,
+    Y2 is Y1,
     write('c'),nl,
-    findStartInMaze(Rest, Start, X, Y2, (X1,Y1)).
+    write(Y2),nl,
+    findStartInMaze(Rest, Start, X, Y2, (X,Y2)).
 
 % Locates Ending Position if no actions are given, 
 % if there is no end then maze is invalid.
