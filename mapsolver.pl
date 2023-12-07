@@ -17,34 +17,51 @@
 % navigates maze, if no exit can be arrived at maze 
 % is assumed invalid as there is either no exit, or the maze 
 % is a prison(no viable exits from start position).
-find_exit(Maze,_) :- 
-    findStartSpace(Maze, Begin, HowMuch),
-    findEndSpace(Maze, Finish),
-    write(Maze,' is a maze.').
 find_exit(Maze,Actions) :-  
-    findStartSpace(Maze, Begin, HowMuch),
-    
-
+    Begin = s,
+    Finish = e,
+    Wall = w,
+    Floor = f,
+    find-ymax(Maze,Ymax),
+    find-xmax(Maze,Xmax),
+    write('ymax is - '), write(Ymax),nl,
+    write('xmax is - '), write(Xmax),nl,
+    write('locating start space'),nl,
+    findStartSpace(Maze, Begin, HowMuch, Place1),
+    write('start space is in position '), write(Place1),nl,
+    write('locating end space'),nl,
+    findEndSpace(Maze, Finish, Place2),
+    write('end space is in position '), write(Place2),nl,
+    write('testing maze'),
     write(Maze,' is a maze.').
 
-nth((X,_,_), 1, X).
-nth((_,X,_), 2, X).
-nth((_,_,X), 3, X).
+% finds number of rows
+find-ymax(Maze,Ym) :-
+    length(Maze,A),
+    A = Ym.
 
-setNth((_,Y,Z), 1, X, (X,Y,Z)).
-setNth((X,_,Z), 2, Y, (X,Y,Z)).
-setNth((X,Y,_), 3, Z, (X,Y,Z)).
-
+% finds number of columns
+find-xmax([Row1|Rows],Xm) :-
+    length(Row1,A),
+    A = Xm.
 % Locates Starting Position, 
 % if there is no start or more 
 % than 1 start then maze is invalid.
-findStartSpace([], Start, 0).
-findStartSpace([], Start, StartCount) :- 
-    findStartSpace(Maze1) .
+findStartSpace([Heads|Tail], Start, StartCount, Indexs) :- 
+    nth1(Indexs,Heads,Start).
 % Locates Ending Position if no actions are given, 
 % if there is no end then maze is invalid.
-findEndSpace([], End) :- 
-    .
+
+
+findEndSpace([Heade|Tail], End, Indexe) :- 
+    write('looking for end'),
+    nth1(Indexe,Heade,End),
+    write('end not in this row'),
+    findEndSpace(Tail, End, Indexe).
+
+findEndSpace(Tail, End, Indexe) :- 
+    nth1(Indexe,Tail,End).
+% determines which adjacent spaces can be moved into
 %availableSpaces() :- .
 
 % for testing the identity of 
