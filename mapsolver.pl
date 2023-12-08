@@ -29,8 +29,9 @@ find_exit(Maze,Actions) :-
     write('start space is in position '), write(StartPosition),nl,
     write('end space is in position '), write(EndPosition),nl,
     CurrPos = Startposition,
-    write('testing maze').
-    %write(Maze,' is a maze.').
+    write('testing maze'),
+    write(Maze),
+    write(' is a maze.'),nl.
 
 % finds number of rows
 find_ymax(Maze,Ym) :-
@@ -70,7 +71,8 @@ find_start_and_end(Element1, Element2, Matrix, (X1,Y1), (X2,Y2)) :-
     M = (X2,Y2),
     find_start(Element1, Matrix, Z),
     find_exit(Element2, Matrix, M).
-
+% movement predicates
+% ---------------------------%
 incPositon(Y) :-
     Y1 is Y.
     Y is Y1 + 1.
@@ -93,11 +95,12 @@ moveUps((X,Y)) :-
     moveUp(Y).
 moveUp(Y) :-
     incPosition(Y).
+
 moveDowns((X,Y)) :-
     moveDown(Y).
 moveDown(Y) :-
     decPosition(Y).
-
+% -----------------------------%
 % determines which adjacent spaces can be moved into
 availableSpaces(Maze) :- .
 
