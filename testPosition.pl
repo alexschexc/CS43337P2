@@ -14,3 +14,12 @@ find_positions(Element, Matrix, X, Y) :-
 
 find_exit(Element, Matrix, (X,Y)) :-
     find_positions(Element, Matrix, X, Y).
+
+find_start(Element, Matrix, (X,Y)) :-
+    find_positions(Element, Matrix, X, Y).
+
+find_start_and_end(Element1, Element2, Matrix, (X1,Y1), (X2,Y2)) :-
+    Z = (X1,Y1),
+    M = (X2,Y2),
+    find_start(Element1, Matrix, Z),
+    find_exit(Element2, Matrix, M).

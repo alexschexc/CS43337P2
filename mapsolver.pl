@@ -20,66 +20,57 @@
 find_exit(Maze,Actions) :-  
     Begin = s,
     Finish = e,
-    %find_ymax(Maze,Ymax),
-    %find_xmax(Maze,Xmax),
-    %write('ymax is - '), write(Ymax),nl,
-    %write('xmax is - '), write(Xmax),nl,
+    find_ymax(Maze,Ymax),
+    find_xmax(Maze,Xmax),
+    write('ymax is - '), write(Ymax),nl,
+    write('xmax is - '), write(Xmax),nl,
     write('locating start space'),nl,
-    findStartSpace(Begin, Maze, StartPosition),
-    write('start space is in position '), write(StartPosition),nl,
     write('locating end space'),nl,
-    findEndSpace(Finish, Maze, EndPosition),
+    find_start_and_end(Begin, Finish, Maze, StartPosition, EndPosition),
+    write('start space is in position '), write(StartPosition),nl,
     write('end space is in position '), write(EndPosition),nl,
     write('testing maze').
     %write(Maze,' is a maze.').
 
 % finds number of rows
-%find_ymax(Maze,Ym) :-
-%    length(Maze,A),
-%    A = Ym.
+find_ymax(Maze,Ym) :-
+    length(Maze,A),
+    A = Ym.
 
 % finds number of columns
-%find_xmax([Row1|Rows],Xm) :-
-%    length(Row1,A),
-%    A = Xm.
+find_xmax([Row1|Rows],Xm) :-
+    length(Row1,A),
+    A = Xm.
+
 % Locates Starting Position, 
 % if there is no start or more 
-% than 1 start then maze is invalid.
-
-findStartInMaze(Start, [[RowHead|RestRow]|_],  X, 1) :-
-    nth1(X,[RowHead|RestRow],Start),
+% than 1 start then maze is invalid.    
+%% Base case: The element is found at the head of the first row.
+position(Element, [[Head|RestRow]|_], 1, Y) :-
+    nth1(Y, [Head|RestRow], Element),
     !.
-findStartInMaze(Start, [_|RestMatrix],  X, Y) :-
-    findStartInMaze(Start, [_|RestMatrix],  X, Y1),
-    Y is Y1 + 1.
-    
-% wrapper predicate
-findStart(Start, Maze, X, Y ) :- 
-    findStartInMaze(Start, Maze, X, Y).
-% wrapper for the wrapper, unifies X and Y variables to (X,Y) ordered pair.
-findStartSpace(Start, Maze, (X,Y)) :- 
-    findStart(Start, Maze, X, Y).
 
-% Locates Ending Position if no actions are given, 
-% if there is no end then maze is invalid.
+% Recursive case: The element is not in the head of the first row.
+position(Element, [_|RestMatrix], X, Y) :-
+    position(Element, RestMatrix, X1, Y),
+    X is X1 + 1.
 
-findEndInMaze(End, [[RowHead|RestRow]|_],  X, 1) :- 
-    write('I'),nl,
-    nth1(X,[RowHead|RestRow],End),
-    write(X),
-    !.
-findEndInMaze(End, [_|RestMatrix], X, Y):-
-    write('II'),nl,
-    findEndInMaze(End, [_|RestMatrix], X, Y2),
-    write('III'),nl,
-    Y is Y2 + 1.
-% wrapper predicate
-findEnd(End, Maze, X, Y) :- 
-    write('A'),nl,
-    findEndInMaze(End, Maze, X, Y).
-% wrapper for the wrapper, unifies X and Y variables to (X,Y) ordered pair.
-findEndSpace(End, Maze, (X,Y)) :-
-    findEnd(End, Maze, X, Y).
+% Wrapper predicate for the user
+find_positions(Element, Matrix, X, Y) :-
+    position(Element, Matrix, Y, X).
+
+find_exit(Element, Matrix, (X,Y)) :-
+    find_positions(Element, Matrix, X, Y).
+
+find_start(Element, Matrix, (X,Y)) :-
+    find_positions(Element, Matrix, X, Y).
+
+find_start_and_end(Element1, Element2, Matrix, (X1,Y1), (X2,Y2)) :-
+    Z = (X1,Y1),
+    M = (X2,Y2),
+    find_start(Element1, Matrix, Z),
+    find_exit(Element2, Matrix, M).
+
 
 % determines which adjacent spaces can be moved into
 %availableSpaces() :- .
