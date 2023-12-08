@@ -1,3 +1,4 @@
+:- use_module(library(lists)).
 %% 
 % Student contributors: Grant Fernwaltt, Alex Schexnayder
 %
@@ -24,11 +25,10 @@ find_exit(Maze,Actions) :-
     find_xmax(Maze,Xmax),
     write('ymax is - '), write(Ymax),nl,
     write('xmax is - '), write(Xmax),nl,
-    write('locating start space'),nl,
-    write('locating end space'),nl,
     find_start_and_end(Begin, Finish, Maze, StartPosition, EndPosition),
     write('start space is in position '), write(StartPosition),nl,
     write('end space is in position '), write(EndPosition),nl,
+    CurrPos = Startposition,
     write('testing maze').
     %write(Maze,' is a maze.').
 
@@ -71,16 +71,35 @@ find_start_and_end(Element1, Element2, Matrix, (X1,Y1), (X2,Y2)) :-
     find_start(Element1, Matrix, Z),
     find_exit(Element2, Matrix, M).
 
+incPositon(Y) :-
+    Y1 is Y.
+    Y is Y1 + 1.
+
+decPosition(Y) :-
+    Y1 is Y.
+    Y is Y1 + 1.
+
+moveLefts((X,Y)) :-
+    moveLeft(X).
+moveLeft(X) :-
+    decPosition(X).
+
+moveRights((X,Y)) :-
+    moveRight(X).
+moveRight(X) :-
+    incPosition(X).
+
+moveUps((X,Y)) :-
+    moveUp(Y).
+moveUp(Y) :-
+    incPosition(Y).
+moveDowns((X,Y)) :-
+    moveDown(Y).
+moveDown(Y) :-
+    decPosition(Y).
 
 % determines which adjacent spaces can be moved into
-%availableSpaces() :- .
+availableSpaces(Maze) :- .
 
-% for testing the identity of 
-% current space position 
-% (wall vs floor vs start vs end)
-%testSpace(Maze, Actions) :- 
-%    . 
 % Moves to next location.
-%navSpace(Maze, Actions) :-
-%    .
- 
+navSpace(Maze, Actions) :- .
