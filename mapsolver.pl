@@ -66,7 +66,7 @@ findStartSpace(Start, Maze, (X,Y)) :-
 findEndInMaze(End, [[RowHead|RestRow]|_],  X, 1) :- 
     write('I'),nl,
     nth1(X,[RowHead|RestRow],End),
-    write(X),nl,
+    write(X),
     !.
 findEndInMaze(End, [_|RestMatrix], X, Y):-
     write('II'),nl,
