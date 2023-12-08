@@ -30,6 +30,7 @@ find_exit(Maze,Actions) :-
     write('end space is in position '), write(EndPosition),nl,
     CurrPos = Startposition,
     write('testing maze'),
+    navSpace(Maze, CurrPos, EndPosition, Actions),
     write(Maze),
     write(' is a maze.'),nl.
 
@@ -73,36 +74,52 @@ find_start_and_end(Element1, Element2, Matrix, (X1,Y1), (X2,Y2)) :-
     find_exit(Element2, Matrix, M).
 % movement predicates
 % ---------------------------%
-incPositon(Y) :-
-    Y1 is Y.
+incPosition(Y) :-
+    Y = Y1,
     Y is Y1 + 1.
 
 decPosition(Y) :-
-    Y1 is Y.
-    Y is Y1 + 1.
+    Y is Y - 1.
 
-moveLefts((X,Y)) :-
-    moveLeft(X).
-moveLeft(X) :-
+moveLefts((X,_)) :-
     decPosition(X).
+%moveLeft(X) :-
+%    decPosition(X).
 
-moveRights((X,Y)) :-
-    moveRight(X).
-moveRight(X) :-
+moveRights((X,_)) :-
     incPosition(X).
+%moveRight(X) :-
+%    incPosition(X).
 
-moveUps((X,Y)) :-
-    moveUp(Y).
-moveUp(Y) :-
+moveUps((_,Y)) :-
     incPosition(Y).
+%moveUp(Y) :-
+%    incPosition(Y).
 
-moveDowns((X,Y)) :-
-    moveDown(Y).
-moveDown(Y) :-
+moveDowns((_,Y)) :-
     decPosition(Y).
+%moveDown(Y) :-
+%    decPosition(Y).
 % -----------------------------%
-% determines which adjacent spaces can be moved into
-availableSpaces(Maze) :- .
 
-% Moves to next location.
-navSpace(Maze, Actions) :- .
+
+% Traverses Maze.
+%   What this has to do:
+%   - get an arbitrary coordinate from a move command 
+%    (this will take predicates for each direction). 
+%   - relate those coordinates to either a floor or an exit 
+%    (noteably *not* a wall), and set "current" coordinates 
+%    to those coordinates, and add corresponding direction to `Actions`
+%    list (i.e. "up", "down", etc.).
+%   - base predicate will be if the current coordinates match 
+%    the end coordinates.
+navSpace(_, (EndX,EndY), (EndX,EndY), Actions).
+navSpace(Maze, (CurrX,CurrY), (EndX,EndY),Actions) :- 
+    %helper predicate that will relate a possible move direction
+    %MAY NEED MORE INFORMATION/VARIABLES
+    valid_move((CurrX,CurrY),Direction). 
+    %Append correct move direction to Actions, recurse.
+
+
+% determines which adjacent spaces can be moved into
+%availableSpaces(Maze) :- .
