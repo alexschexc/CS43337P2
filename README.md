@@ -1,3 +1,5 @@
 # CS43337P2
+Grant Fernwalt
+Alex Schexnayder
 
-Dear God why?!?!?!?!
+Prolog Maze Solver Project
