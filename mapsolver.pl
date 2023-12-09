@@ -28,10 +28,11 @@ find_exit(Maze,Actions) :-
     find_start_and_end(Begin, Finish, Maze, StartPosition, EndPosition),
     write('start space is in position '), write(StartPosition),nl,
     write('end space is in position '), write(EndPosition),nl,
-    CurrPos = Startposition,
-    write('testing maze'),
-    write(Maze),
-    write(' is a maze.'),nl.
+    CurrPos = StartPosition,
+    %write('testing maze'),
+    navSpace(Maze, CurrPos, EndPosition,[], Actions).
+    %write(Maze),
+    %write(' is a maze.'),nl.
 
 % finds number of rows
 find_ymax(Maze,Ym) :-
@@ -39,7 +40,7 @@ find_ymax(Maze,Ym) :-
     A = Ym.
 
 % finds number of columns
-find_xmax([Row1|Rows],Xm) :-
+find_xmax([Row1|_],Xm) :-
     length(Row1,A),
     A = Xm.
 
@@ -73,36 +74,92 @@ find_start_and_end(Element1, Element2, Matrix, (X1,Y1), (X2,Y2)) :-
     find_exit(Element2, Matrix, M).
 % movement predicates
 % ---------------------------%
-incPositon(Y) :-
-    Y1 is Y.
-    Y is Y1 + 1.
+incPosition(Y,Y1) :-
+    Y1 is Y + 1.
 
-decPosition(Y) :-
-    Y1 is Y.
-    Y is Y1 + 1.
+decPosition(Y,Y1) :-
+    Y1 is Y - 1.
 
-moveLefts((X,Y)) :-
-    moveLeft(X).
-moveLeft(X) :-
-    decPosition(X).
+moveLefts((X,Y),(X1,Y)) :-
+    decPosition(X,X1).
+%moveLeft(X) :-
+%    decPosition(X).
 
-moveRights((X,Y)) :-
-    moveRight(X).
-moveRight(X) :-
-    incPosition(X).
+moveRights((X,Y),(X1,Y)) :-
+    incPosition(X,X1).
+%moveRight(X) :-
+%    incPosition(X).
 
-moveUps((X,Y)) :-
-    moveUp(Y).
-moveUp(Y) :-
-    incPosition(Y).
+moveUps((X,Y),(X,Y1)) :-
+    decPosition(Y,Y1).
+%moveUp(Y) :-
+%    incPosition(Y).
 
-moveDowns((X,Y)) :-
-    moveDown(Y).
-moveDown(Y) :-
-    decPosition(Y).
+moveDowns((X,Y),(X,Y1)) :-
+    incPosition(Y,Y1).
+%moveDown(Y) :-
+%    decPosition(Y).
 % -----------------------------%
-% determines which adjacent spaces can be moved into
-availableSpaces(Maze) :- .
 
-% Moves to next location.
-navSpace(Maze, Actions) :- .
+
+% Traverses Maze.
+%   What this has to do:
+%   - get an arbitrary coordinate from a move command 
+%    (this will take predicates for each direction). 
+%   - relate those coordinates to either a floor or an exit 
+%    (noteably *not* a wall), and set "current" coordinates 
+%    to those coordinates, and add corresponding direction to `Actions`
+%    list (i.e. "up", "down", etc.).
+%   - base predicate will be if the current coordinates match 
+%    the end coordinates.
+navSpace(_, (EndX,EndY), (EndX,EndY),_, []).
+
+navSpace(Maze,(CurrX,CurrY), (EndX,EndY), History, [right|T]) :- 
+    %write((CurrX,CurrY)),
+    moveRights((CurrX,CurrY),(NewX,NewY)),
+    %helper predicate that will validate our movement choice
+    valid_move((NewX,NewY),History,Maze),
+    %prepend our new coordinates to history
+    NewHistory = [(NewX,NewY)| History],
+    %recursive call
+    navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
+
+navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[left|T]) :- 
+    moveLefts((CurrX,CurrY),(NewX,NewY)),
+    %helper predicate that will relate a possible move direction
+    valid_move((NewX,NewY),History,Maze),
+    %prepend our new coordinates to history    
+    NewHistory = [(NewX,NewY)| History],
+    navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
+
+navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[down|T]) :- 
+    moveDowns((CurrX,CurrY),(NewX,NewY)),
+    %helper predicate that will relate a possible move direction
+    valid_move((NewX,NewY),History,Maze),
+    %prepend our new coordinates to history    
+    NewHistory = [(NewX,NewY)| History],
+    navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
+
+navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[up|T]) :- 
+    moveUps((CurrX,CurrY),(NewX,NewY)),
+    %helper predicate that will relate a possible move direction
+    valid_move((NewX,NewY),History,Maze),
+    %prepend our new coordinates to history    
+    NewHistory = [(NewX,NewY)| History],
+    %recursive call
+    navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
+
+
+valid_move((NewX,NewY),History, Maze) :-
+    % get size of maze
+    find_ymax(Maze,Ym),
+    find_xmax(Maze,Xm),
+    %bounds check
+    NewX =< Xm, NewY =< Ym,
+    % we have to flip the X and Y in this call because 
+    % we treat Y as the collumn and X as the row in position().
+    position(Tile, Maze, NewY, NewX),
+    %Match with anything but a wall tile
+    Tile \=w, 
+    %it is not the case that our new coordinates are in History
+    \+ member((NewX,NewY),History). 
