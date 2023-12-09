@@ -29,11 +29,12 @@ find_exit(Maze,Actions) :-
     write('start space is in position '), write(StartPosition),nl,
     write('end space is in position '), write(EndPosition),nl,
     CurrPos = StartPosition,
-    %write('testing maze'),
-    %test_maze(Maze,Xmax,Ymax),
+    write('testing maze'),nl,
+    test_maze(Maze),
+    write(Maze),
+    write(' is a maze.'),nl,
     navSpace(Maze, CurrPos, EndPosition,[], Actions).
-    %write(Maze),
-    %write(' is a maze.'),nl.
+    
 
 % finds number of rows
 find_ymax(Maze,Ym) :-
@@ -45,11 +46,46 @@ find_xmax([Row1|_],Xm) :-
     length(Row1,A),
     A = Xm.
 
-s_number() :-.
+snum(Maze) :-
+    occurs(s,Maze,Snum),
+    write(Snum),nl,
+    status(Snum).
+    
+status(Snum) :-
+    Snum =< 1,
+    write('moving on'),nl.
 
-test_maze(Maze,X,Y) :-
-    s_number(),
-    .
+status(Snum) :-
+    Snum > 1,
+    !, fail.
+% Base case: an element is not in an empty list.
+occurs(_, [], 0).
+
+% Case 1: Element is in the head of the list.
+occurs(Element, [Head | Tail], N) :-
+    occurs_in_list(Element, Head, CountInHead),
+    write(CountInHead),nl,
+    occurs(Element, Tail, CountInTail),
+    write(CountInTail),nl,
+    N is CountInHead + CountInTail,
+    write(N),nl.
+
+% Case 2: Element is not in the head of the list.
+occurs(Element, [_ | Tail], N) :-
+    occurs(Element, Tail, N).
+
+% Helper predicate to count occurrences in a list.
+occurs_in_list(_, [], 0).
+occurs_in_list(Element, [Element | Tail], N) :-
+    occurs_in_list(Element, Tail, N1),
+    N is N1 + 1.
+occurs_in_list(Element, [_ | Tail], N) :-
+    occurs_in_list(Element, Tail, N).
+
+test_maze(Maze) :-
+    write('testing'),nl,
+    snum(Maze),
+    write('tested'),nl.
 
 % Locates Starting Position, 
 % if there is no start or more 
@@ -92,6 +128,7 @@ find_start_and_end(Element1, Element2, Matrix, (X1,Y1), (X2,Y2)) :-
     M = (X2,Y2),
     find_start(Element1, Matrix, Z),
     find_exit(Element2, Matrix, M).
+
 % movement predicates
 % ---------------------------%
 incPosition(Y,Y1) :-
@@ -102,23 +139,15 @@ decPosition(Y,Y1) :-
 
 moveLefts((X,Y),(X1,Y)) :-
     decPosition(X,X1).
-%moveLeft(X) :-
-%    decPosition(X).
 
 moveRights((X,Y),(X1,Y)) :-
     incPosition(X,X1).
-%moveRight(X) :-
-%    incPosition(X).
 
 moveUps((X,Y),(X,Y1)) :-
     decPosition(Y,Y1).
-%moveUp(Y) :-
-%    incPosition(Y).
 
 moveDowns((X,Y),(X,Y1)) :-
     incPosition(Y,Y1).
-%moveDown(Y) :-
-%    decPosition(Y).
 % -----------------------------%
 
 
@@ -186,9 +215,7 @@ valid_move((NewX,NewY),History, Maze) :-
     NewX =< Xm, NewY =< Ym,
     % we have to flip the X and Y in this call because 
     % we treat Y as the collumn and X as the row in position().
-    write('hello'),
     position(Tile, Maze, NewY, NewX),
-    nl,write(Tile),nl,
     %Match with anything but a wall tile
     Tile \=w,
     Tile \=s, 
