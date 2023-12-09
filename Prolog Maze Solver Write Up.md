@@ -11,7 +11,11 @@ The first problem arose with the question of how to actually locate elements wit
 
 The second problem arose with the question of how to traverse the list of lists as a maze.
 
+The third problem arose with the question of how to indicate that the exit of the maze had been arrived at and the maze had been successfully navigated.
+
+The final problem was testing the maze to make sure that it was not awkwardly shaped and that only 1 's' tile exists in the maze.
 
 # Problems Fixed
 
 # What Did You Learn?
+Prolog is fun. Prolog is also painful.
