@@ -30,6 +30,7 @@ find_exit(Maze,Actions) :-
     write('end space is in position '), write(EndPosition),nl,
     CurrPos = StartPosition,
     %write('testing maze'),
+    %test_maze(Maze,Xmax,Ymax),
     navSpace(Maze, CurrPos, EndPosition,[], Actions).
     %write(Maze),
     %write(' is a maze.'),nl.
@@ -44,6 +45,12 @@ find_xmax([Row1|_],Xm) :-
     length(Row1,A),
     A = Xm.
 
+s_number() :-.
+
+test_maze(Maze,X,Y) :-
+    s_number(),
+    .
+
 % Locates Starting Position, 
 % if there is no start or more 
 % than 1 start then maze is invalid.    
@@ -54,18 +61,31 @@ position(Element, [[Head|RestRow]|_], 1, Y) :-
 
 % Recursive case: The element is not in the head of the first row.
 position(Element, [_|RestMatrix], X, Y) :-
-    position(Element, RestMatrix, X1, Y),
-    X is X1 + 1.
+    X1 is X - 1,
+    position(Element, RestMatrix, X1, Y).
 
 % Wrapper predicate for the user
-find_positions(Element, Matrix, X, Y) :-
-    position(Element, Matrix, Y, X).
+find_positions(Element, Matrix, Xfinal, Yfinal,Xfinal,Yfinal) :-
+    position(Element, Matrix, Yfinal, Xfinal).
+
+find_positions(Element, Matrix, X, Y, Xfinal, Yfinal) :-
+    moveRights((X,Y),(X3,Y3)),
+    find_xmax(Matrix,Xm),
+    X3 =< Xm,
+    find_positions(Element, Matrix, X3, Y3, Xfinal, Yfinal).
+
+find_positions(Element, Matrix, _, Y, Xfinal, Yfinal) :-
+    moveDowns((1,Y),(X3,Y3)),
+    find_ymax(Matrix,Ym),
+    Y3 =< Ym,
+    find_positions(Element, Matrix, X3, Y3, Xfinal, Yfinal).
 
 find_exit(Element, Matrix, (X,Y)) :-
-    find_positions(Element, Matrix, X, Y).
+    find_positions(Element, Matrix, 1, 1, X, Y).
 
 find_start(Element, Matrix, (X,Y)) :-
-    find_positions(Element, Matrix, X, Y).
+    find_positions(Element, Matrix, 1, 1,X,Y).
+
 
 find_start_and_end(Element1, Element2, Matrix, (X1,Y1), (X2,Y2)) :-
     Z = (X1,Y1),
@@ -116,37 +136,45 @@ navSpace(_, (EndX,EndY), (EndX,EndY),_, []).
 
 navSpace(Maze,(CurrX,CurrY), (EndX,EndY), History, [right|T]) :- 
     %write((CurrX,CurrY)),
+    write('moving right'),nl,
     moveRights((CurrX,CurrY),(NewX,NewY)),
     %helper predicate that will validate our movement choice
     valid_move((NewX,NewY),History,Maze),
     %prepend our new coordinates to history
     NewHistory = [(NewX,NewY)| History],
     %recursive call
+    write(NewX),write(','),write(NewY),nl,
     navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
 
 navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[left|T]) :- 
+    write('moving left'),nl,
     moveLefts((CurrX,CurrY),(NewX,NewY)),
     %helper predicate that will relate a possible move direction
     valid_move((NewX,NewY),History,Maze),
     %prepend our new coordinates to history    
     NewHistory = [(NewX,NewY)| History],
+    write(NewX),write(','),write(NewY),nl,
     navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
 
 navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[down|T]) :- 
+    write('moving down'),nl,
     moveDowns((CurrX,CurrY),(NewX,NewY)),
     %helper predicate that will relate a possible move direction
+    write(NewX),write(','),write(NewY),nl,
     valid_move((NewX,NewY),History,Maze),
     %prepend our new coordinates to history    
     NewHistory = [(NewX,NewY)| History],
     navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
 
 navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[up|T]) :- 
+    write('moving up'),nl,
     moveUps((CurrX,CurrY),(NewX,NewY)),
     %helper predicate that will relate a possible move direction
     valid_move((NewX,NewY),History,Maze),
     %prepend our new coordinates to history    
     NewHistory = [(NewX,NewY)| History],
     %recursive call
+    write(NewX),write(','),write(NewY),nl,
     navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
 
 
@@ -158,8 +186,11 @@ valid_move((NewX,NewY),History, Maze) :-
     NewX =< Xm, NewY =< Ym,
     % we have to flip the X and Y in this call because 
     % we treat Y as the collumn and X as the row in position().
+    write('hello'),
     position(Tile, Maze, NewY, NewX),
+    nl,write(Tile),nl,
     %Match with anything but a wall tile
-    Tile \=w, 
+    Tile \=w,
+    Tile \=s, 
     %it is not the case that our new coordinates are in History
     \+ member((NewX,NewY),History). 
