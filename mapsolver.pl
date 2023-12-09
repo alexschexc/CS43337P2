@@ -124,15 +124,6 @@ navSpace(Maze,(CurrX,CurrY), (EndX,EndY), History, [right|T]) :-
     %recursive call
     navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
 
-navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[up|T]) :- 
-    moveUps((CurrX,CurrY),(NewX,NewY)),
-    %helper predicate that will relate a possible move direction
-    valid_move((NewX,NewY),History,Maze),
-    %prepend our new coordinates to history    
-    NewHistory = [(NewX,NewY)| History],
-    %recursive call
-    navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
-
 navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[left|T]) :- 
     moveLefts((CurrX,CurrY),(NewX,NewY)),
     %helper predicate that will relate a possible move direction
@@ -147,6 +138,15 @@ navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[down|T]) :-
     valid_move((NewX,NewY),History,Maze),
     %prepend our new coordinates to history    
     NewHistory = [(NewX,NewY)| History],
+    navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
+
+navSpace(Maze,(CurrX,CurrY), (EndX,EndY),History,[up|T]) :- 
+    moveUps((CurrX,CurrY),(NewX,NewY)),
+    %helper predicate that will relate a possible move direction
+    valid_move((NewX,NewY),History,Maze),
+    %prepend our new coordinates to history    
+    NewHistory = [(NewX,NewY)| History],
+    %recursive call
     navSpace(Maze, (NewX,NewY), (EndX,EndY),NewHistory, T).
 
 
