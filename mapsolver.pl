@@ -33,7 +33,13 @@ find_exit(Maze,Actions) :-
     test_maze(Maze,Xmax),
     write(Maze),
     write(' is a maze.'),nl,
-    navSpace(Maze, CurrPos, EndPosition,[], Actions).
+    navSpace(Maze, CurrPos, EndPosition,[], Actions),!.
+    % I believe the professor said that our predicate should try to find multiple 
+    % possible solutions, but for some reason strange things seem to happen for us
+    % if we allow the program to do that, so we added a cut to make it so that it 
+    % always stops after the first check. If you want to see the strange behavior,
+    % remove the cut, then make a query for it to solve a map (like basic_map/1) and 
+    % watch what happens. 
     
 
 % finds number of rows
