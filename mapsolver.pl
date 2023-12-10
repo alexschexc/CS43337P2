@@ -30,7 +30,7 @@ find_exit(Maze,Actions) :-
     write('end space is in position '), write(EndPosition),nl,
     CurrPos = StartPosition,
     write('testing maze'),nl,
-    test_maze(Maze),
+    test_maze(Maze,Xmax),
     write(Maze),
     write(' is a maze.'),nl,
     navSpace(Maze, CurrPos, EndPosition,[], Actions).
@@ -51,45 +51,17 @@ snum(Maze) :-
     select(s,FlatMaze, NewMaze),
     \+ select(s,NewMaze, _).
 
-% snum(Maze) :-
-%     occurs(s,Maze,Snum),
-%     write(Snum),nl,
-%     status(Snum).
-    
-% status(Snum) :-
-%     Snum =< 1,
-%     write('moving on'),nl.
+%BaseCase
+rectangular([],_).
+%recursive case
+rectangular([Row|T],Xmax) :-
+    length(Row, Xmax),
+    rectangular(T,Xmax).
 
-% status(Snum) :-
-%     Snum > 1,
-%     !, fail.
-% % Base case: an element is not in an empty list.
-% occurs(_, [], 0).
-
-% % Case 1: Element is in the head of the list.
-% occurs(Element, [Head | Tail], N) :-
-%     occurs_in_list(Element, Head, CountInHead),
-%     write(CountInHead),nl,
-%     occurs(Element, Tail, CountInTail),
-%     write(CountInTail),nl,
-%     N is CountInHead + CountInTail,
-%     write(N),nl.
-
-% % Case 2: Element is not in the head of the list.
-% occurs(Element, [_ | Tail], N) :-
-%     occurs(Element, Tail, N).
-
-% % Helper predicate to count occurrences in a list.
-% occurs_in_list(_, [], 0).
-% occurs_in_list(Element, [Element | Tail], N) :-
-%     occurs_in_list(Element, Tail, N1),
-%     N is N1 + 1.
-% occurs_in_list(Element, [_ | Tail], N) :-
-%     occurs_in_list(Element, Tail, N).
-
-test_maze(Maze) :-
+test_maze(Maze, Xmax) :-
     write('testing'),nl,
     snum(Maze),
+    rectangular(Maze,Xmax),
     write('tested'),nl.
 
 % Locates Starting Position, 
