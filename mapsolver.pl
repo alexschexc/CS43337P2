@@ -47,40 +47,45 @@ find_xmax([Row1|_],Xm) :-
     A = Xm.
 
 snum(Maze) :-
-    occurs(s,Maze,Snum),
-    write(Snum),nl,
-    status(Snum).
+    flatten(Maze,FlatMaze),
+    select(s,FlatMaze, NewMaze),
+    \+ select(s,NewMaze, _).
+
+% snum(Maze) :-
+%     occurs(s,Maze,Snum),
+%     write(Snum),nl,
+%     status(Snum).
     
-status(Snum) :-
-    Snum =< 1,
-    write('moving on'),nl.
+% status(Snum) :-
+%     Snum =< 1,
+%     write('moving on'),nl.
 
-status(Snum) :-
-    Snum > 1,
-    !, fail.
-% Base case: an element is not in an empty list.
-occurs(_, [], 0).
+% status(Snum) :-
+%     Snum > 1,
+%     !, fail.
+% % Base case: an element is not in an empty list.
+% occurs(_, [], 0).
 
-% Case 1: Element is in the head of the list.
-occurs(Element, [Head | Tail], N) :-
-    occurs_in_list(Element, Head, CountInHead),
-    write(CountInHead),nl,
-    occurs(Element, Tail, CountInTail),
-    write(CountInTail),nl,
-    N is CountInHead + CountInTail,
-    write(N),nl.
+% % Case 1: Element is in the head of the list.
+% occurs(Element, [Head | Tail], N) :-
+%     occurs_in_list(Element, Head, CountInHead),
+%     write(CountInHead),nl,
+%     occurs(Element, Tail, CountInTail),
+%     write(CountInTail),nl,
+%     N is CountInHead + CountInTail,
+%     write(N),nl.
 
-% Case 2: Element is not in the head of the list.
-occurs(Element, [_ | Tail], N) :-
-    occurs(Element, Tail, N).
+% % Case 2: Element is not in the head of the list.
+% occurs(Element, [_ | Tail], N) :-
+%     occurs(Element, Tail, N).
 
-% Helper predicate to count occurrences in a list.
-occurs_in_list(_, [], 0).
-occurs_in_list(Element, [Element | Tail], N) :-
-    occurs_in_list(Element, Tail, N1),
-    N is N1 + 1.
-occurs_in_list(Element, [_ | Tail], N) :-
-    occurs_in_list(Element, Tail, N).
+% % Helper predicate to count occurrences in a list.
+% occurs_in_list(_, [], 0).
+% occurs_in_list(Element, [Element | Tail], N) :-
+%     occurs_in_list(Element, Tail, N1),
+%     N is N1 + 1.
+% occurs_in_list(Element, [_ | Tail], N) :-
+%     occurs_in_list(Element, Tail, N).
 
 test_maze(Maze) :-
     write('testing'),nl,
